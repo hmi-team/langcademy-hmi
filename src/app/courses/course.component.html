@@ -1,0 +1,42 @@
+<div *ngIf="course">
+
+    <h2>{{ course.name }} </h2>
+    
+    <div class="progress">
+        <div class="progress-bar bg-info" role="progressbar" [style.width]="progressValue +'%'" [attr.aria-valuenow]="progressValue" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div id="accordion" >
+
+        <div class="card" *ngFor="let material of course.materials; let i = index">
+            <div class="card-header" [attr.id]="'heading' + i" >
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" [attr.data-target]="'#collapse' + i" aria-expanded="false" [attr.aria-controls]="'collapse' + i">
+                        <i *ngIf="material.type == 'Text'" class="fas fa-font"></i>
+                        <i *ngIf="material.type == 'Link'" class="far fa-newspaper"></i>
+                        <i *ngIf="material.type == 'Video'" class="fab fa-youtube"></i>
+                        <i *ngIf="material.type == 'Test'" class="fas fa-graduation-cap"></i>
+
+                        {{material.name}}
+                    </button>
+                    <span class="btn btn-link" style="float: right;">
+                        <i *ngIf="courseTaken.materialsFinished.indexOf(material.id) >= 0" class="fas fa-check"></i>
+                        <span *ngIf="courseTaken.materialsFinished.indexOf(material.id) < 0">{{material.duration}}</span>
+                    </span>
+
+                </h5>
+            </div>
+
+            <div [attr.id]="'collapse' + i" class="collapse" [attr.aria-labelledby]="'heading' + i" data-parent="#accordion">
+                <div class="card-body">
+                    <p *ngIf="material.text">{{material.text}}</p>
+                    <a target="_blank" *ngIf="material.type == 'Link'" href={{material.url}}>{{material.url}}</a>
+                    <quiz *ngIf="material.type == 'Test'" [materialId]="material.id"></quiz>
+                    <div style="text-align: center;"><iframe *ngIf="material.type == 'Video'" width="560" height="315" src="https://www.youtube.com/embed/aircAruvnKk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+
+                    <div style="text-align: right; color: green;"><i class="fas fa-check"></i> <a (click)="markAsFinished(material.id)"> Mark as complete</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
